@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Image Generator</title>
+  <!-- Font Awesome (Solid 아이콘) -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        referrerpolicy="no-referrer"/>
+  <link rel="stylesheet" href="loading-inline.css"/>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1 class="brand" onclick="location.href='/'" title="홈으로">AI Gen</h1>
+      </div>
+
+      <nav class="sidebar-nav" role="navigation" aria-label="Primary">
+        <ul>
+          <li class="active">
+            <a href="#" aria-current="page">
+              <i class="fa-solid fa-compass" aria-hidden="true"></i>
+              <span>Explore</span>
+            </a>
+          </li>
+          <li>
+            <a href="#"><i class="fa-solid fa-user" aria-hidden="true"></i><span>My Page</span></a>
+          </li>
+          <li>
+            <a href="#"><i class="fa-solid fa-comments" aria-hidden="true"></i><span>Community</span></a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button type="button" class="theme-toggle">Info</button>
+        <button type="button" class="theme-toggle">Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+      <!-- Prompt: edge-to-edge + multiline + EN button text -->
+      <header class="prompt-section">
+        <div class="prompt-input-wrapper" role="search">
+          <textarea class="prompt-input"
+            placeholder="Imagine something... a futuristic city in the style of Van Gogh"
+            aria-label="Prompt input"></textarea>
+          <button class="btn-generate" type="button" aria-label="Generate image">Generate</button>
+        </div>
+      </header>
+
+      <!-- Gallery + inline loading -->
+      <section class="gallery">
+        <div class="gallery-item">
+          <img src="https://picsum.photos/seed/random-image/400/400" alt="Generated Image"/>
+        </div>
+
+        <div class="loading-box-inline">
+          <button class="cancel-button" type="button">X 취소</button>
+          <div class="spinner" aria-hidden="true"></div>
+          <h2>잠시만요...</h2>
+          <p>AI Gen이 이미지를 만들고 있어요.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

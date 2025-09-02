@@ -6,6 +6,7 @@ import FreeView from '@pages/component/FreeView.jsx'
 const Root = () => {
   const { access, setAccess, modalEvent, isStorage, getBoardFile, isFreeView, setIsFreeView, getUserNo, targetImage } = useRoot()
   const [images, setImages] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
   
   const promptRef = useRef()
 
@@ -26,17 +27,18 @@ const Root = () => {
   }
 
   const applyEvent = () => {
+    setIsLoading(true)
     FastAPI("POST", "/gen", {p: promptRef.current.value, no: getUserNo()})
     .then(res => {
       if(res.status){
         getBoards()
+        promptRef.current.value = ""
       } else {
         alert("이미지 생성이 실패 하였습니다.")
       }
+      setIsLoading(false)
     })
   }
-
-  
 
   useEffect(() => {
     getBoards()
@@ -54,6 +56,14 @@ const Root = () => {
       </header>
 
       <section className="gallery">
+        {isLoading &&
+        <div className="loading-box-inline">
+          {/* <button className="cancel-button" type="button">X 취소</button> */}
+          <div className="spinner" aria-hidden="true"></div>
+          <h2>잠시만요...</h2>
+          <p>AI Gen이 이미지를 만들고 있어요.</p>
+        </div>
+        }
         { /* 이미지 반복 */
           images?.map((row, index) => {
             return (

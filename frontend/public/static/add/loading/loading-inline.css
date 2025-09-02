@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+:root {
+  --bg-color:#1c1c1c;
+  --sidebar-bg:#282828;
+  --primary-color:#5865F2;
+  --secondary-color:#4f545c;
+  --text-color:#dcddde;
+  --text-muted:#b9bbbe;
+  --border-color:#404040;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.container { display: flex; }
+
+/* ===== Sidebar ===== */
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: 240px; height: 100vh;
+  background-color: var(--sidebar-bg);
+  padding: 20px;
+  display: flex; flex-direction: column;
+  overflow-y: auto;
+}
+.sidebar-header { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
+.brand { margin: 0; font-size: 22px; font-weight: 700; cursor: pointer; }
+
+.sidebar-nav { flex-grow: 1; }
+.sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
+.sidebar-nav li a{
+  display:flex; align-items:center; gap:12px; padding:12px;
+  text-decoration:none; color:var(--text-muted); font-size:16px; font-weight:500;
+  border-radius:5px; transition: background-color .2s, color .2s;
+}
+.sidebar-nav li a:hover{ background-color:var(--secondary-color); color:var(--text-color); }
+.sidebar-nav li.active a{ background-color:var(--primary-color); color:#fff; }
+.sidebar-nav i{ width:18px; text-align:center; font-size:16px; }
+.sidebar-nav a:focus-visible{ outline:2px solid var(--primary-color); outline-offset:3px; }
+
+.sidebar-footer{ display:flex; flex-direction:column; gap:10px; }
+.theme-toggle{
+  width:100%; padding:10px 15px; border:none; border-radius:6px; cursor:pointer;
+  background-color:var(--secondary-color); color:var(--text-color); transition:background-color .2s;
+}
+.theme-toggle:hover{ background-color:#59606a; }
+
+/* ===== Main ===== */
+.main-content {
+  margin-left: 240px;
+  flex-grow: 1;
+  padding: 24px 40px 40px;
+}
+
+/* ===== Prompt: edge-to-edge with slight inset ===== */
+.prompt-section{
+  position: sticky; top: 0; z-index: 10;
+  padding-top: 6px; margin-bottom: 24px;
+  background: linear-gradient(var(--bg-color), var(--bg-color));
+}
+
+.prompt-input-wrapper{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+
+  /* 좌우 살짝 여백 (main padding 40px 중 24px만 상쇄) */
+  width: calc(100% + 48px);
+  margin-left: -24px;
+  margin-right: -24px;
+
+  background-color: #222;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.03) inset;
+}
+
+.prompt-input{
+  resize: vertical;
+  min-height: 96px;
+  max-height: 40vh;
+  width: 100%;
+  background: transparent;
+  border: none; outline: none;
+  color: var(--text-color);
+  font-size: 16px;
+  line-height: 1.6;
+  padding: 14px;
+  caret-color: #fff;
+}
+
+.btn-generate{
+  margin-left: 8px;
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none; border-radius: 10px;
+  padding: 0 22px; font-size: 16px; font-weight: 600; min-width: 120px;
+  align-self: stretch;
+}
+.btn-generate:focus-visible{ outline:2px solid #fff; outline-offset:2px; }
+
+/* ===== Gallery & Inline Loading ===== */
+.gallery{
+  display:grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap:20px;
+}
+.gallery-item{ position:relative; border-radius:8px; overflow:hidden; aspect-ratio:1/1; }
+.gallery-item img{ width:100%; height:100%; object-fit:cover; }
+
+.loading-box-inline{
+  background-color:#202020; border:1px solid var(--border-color);
+  border-radius:12px; position:relative; aspect-ratio:1/1;
+  display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px;
+}
+.cancel-button{
+  position:absolute; top:12px; right:12px;
+  background-color:#3a3a3a; color:var(--text-muted);
+  border:none; border-radius:50px; padding:5px 10px; font-size:12px; font-weight:500; cursor:pointer;
+}
+.spinner{
+  width:60px; height:60px; border-radius:50%; margin-bottom:20px;
+  background: conic-gradient(#DC143C, #8A2BE2, #DC143C);
+  animation: spin 1.5s linear infinite;
+  position:relative; display:flex; justify-content:center; align-items:center;
+}
+.spinner::before{ content:''; position:absolute; width:50px; height:50px; background-color:#202020; border-radius:50%; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+.loading-box-inline h2{ margin:0 0 8px; font-size:18px; font-weight:500; }
+.loading-box-inline p{ margin:0; color:var(--text-muted); font-size:13px; }

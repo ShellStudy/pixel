@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Comment (Two Pane - Fixed + Prompt Auto-Grow)</title>
+
+  <link rel="stylesheet" href="comment-resizable.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+</head>
+<body>
+  <div class="page">
+    <main class="content two-pane" id="splitRoot" style="--left:80%; --right:20%;">
+      <section class="left-pane" aria-label="작품 및 정보">
+        <!-- 헤더 -->
+        <header class="app-header-inset">
+          <div class="user-info">
+            <img src="https://picsum.photos/seed/user1/56/56" alt="User avatar" class="avatar">
+            <div class="meta">
+              <strong class="username">ArtisticAI</strong>
+              <span class="sub">AI Creator</span>
+            </div>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary">구독</button>
+          </div>
+        </header>
+
+        <!-- 프롬프트(자동 높이 확장 + 복사 버튼) -->
+        <section class="prompt-bar-inset">
+          <!-- readonly textarea로 바꿔 자동 높이 제어 -->
+          <textarea class="prompt-text auto-grow" readonly
+                    aria-label="생성 프롬프트"
+                    data-autogrow-max="30vh">a majestic lion with a crown of stars, photorealistic, cinematic lighting, 8k</textarea>
+          <button class="btn copy-btn" type="button" id="copyPromptBtn">
+            <i class="fa-regular fa-copy"></i> 프롬프트 복사
+          </button>
+        </section>
+
+        <!-- 메인 이미지 -->
+        <div class="image-area">
+          <img src="https://images.unsplash.com/photo-1599839958368-1549c71c0803?q=80&w=1287&auto-format&fit=crop" alt="Generated artwork">
+
+          <!-- 좋아요(기존 유지) -->
+          <div class="image-actions">
+            <button class="icon-btn" aria-label="좋아요" id="likeBtn">
+              <i class="fa-regular fa-heart"></i>
+            </button>
+          </div>
+
+          <!-- ✅ 원본 보기 버튼 추가 -->
+          <button class="view-original-btn"
+                  data-full="https://images.unsplash.com/photo-1599839958368-1549c71c0803?q=80&w=2000&auto-format&fit=crop"
+                  type="button" id="viewOriginalBtn">
+            <i class="fa-solid fa-up-right-and-down-left-from-center"></i> 원본 보기
+          </button>
+        </div>
+      </section>
+
+      <!-- 오른쪽 코멘트 패널 -->
+      <aside class="comments" aria-label="댓글" id="commentsPane" style="--listHeight:80%;">
+        <div class="comments-header">
+          <h3>코멘트</h3>
+        </div>
+
+        <ul class="comment-list" id="commentList">
+          <li class="comment-item">
+            <img class="comment-avatar" src="https://picsum.photos/seed/a/40/40" alt="">
+            <div class="comment-content">
+              <strong>PixelPush</strong>
+              <p>정말 멋진 작품이네요! 별의 표현이 인상적이에요.</p>
+              <span class="comment-timestamp">24시간 전</span>
+            </div>
+          </li>
+          <li class="comment-item">
+            <img class="comment-avatar" src="https://picsum.photos/seed/b/40/40" alt="">
+            <div class="comment-content">
+              <strong>ArtisticAI (나)</strong>
+              <p>감사합니다! 영감을 받아서 작업해봤어요.</p>
+              <span class="comment-timestamp">14시간 전</span>
+            </div>
+          </li>
+          <li class="comment-item">
+            <img class="comment-avatar" src="https://picsum.photos/seed/c/40/40" alt="">
+            <div class="comment-content">
+              <strong>FutureScapes</strong>
+              <p>프롬프트 참고해서 저도 만들어봐야겠어요!</p>
+              <span class="comment-timestamp">30분 전</span>
+            </div>
+          </li>
+        </ul>
+
+        <form class="comment-input-row">
+          <div class="comment-input ce" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="코멘트 남기기..."></div>
+          <button class="icon-btn send-btn" type="button" aria-label="전송" id="sendBtn">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    // ===== 프롬프트 텍스트 복사
+    document.getElementById('copyPromptBtn')?.addEventListener('click', () => {
+      const ta = document.querySelector('.prompt-text');
+      if (!ta) return;
+      ta.select();
+      document.execCommand('copy');
+    });
+
+    // ===== 이미지 원본 보기
+    document.getElementById('viewOriginalBtn')?.addEventListener('click', (e)=>{
+      const url = e.currentTarget.dataset.full;
+      if (url) window.open(url, '_blank', 'noopener');
+    });
+
+    // ===== 좋아요 토글
+    document.getElementById('likeBtn')?.addEventListener('click', (e)=>{
+      const btn = e.currentTarget;
+      const ic = btn.querySelector('i');
+      btn.classList.toggle('liked');
+      ic.classList.toggle('fa-regular');
+      ic.classList.toggle('fa-solid');
+      // 색상 변화는 CSS( .image-actions .icon-btn.liked )에 반영되어 있음
+    });
+
+    // ===== 프롬프트 auto-grow (readonly textarea)
+    function cssToPx(val){
+      if(!val) return null;
+      const v = String(val).trim();
+      if(v.endsWith('vh')) return window.innerHeight * (parseFloat(v)/100);
+      if(v.endsWith('px')) return parseFloat(v);
+      return null;
+    }
+    function autoGrow(el){
+      // 최대 높이: data-autogrow-max 우선 → 없으면 CSS의 max-height → fallback 무한
+      const maxAttr = el.getAttribute('data-autogrow-max');
+      const maxPx = cssToPx(maxAttr) ?? (parseFloat(getComputedStyle(el).maxHeight) || Infinity);
+      el.style.height = 'auto';
+      const h = Math.min(el.scrollHeight, isFinite(maxPx) ? maxPx : el.scrollHeight);
+      el.style.height = h + 'px';
+    }
+    const promptTA = document.querySelector('.prompt-text.auto-grow');
+    if(promptTA){
+      autoGrow(promptTA);
+      // 내용이 동적으로 변경될 가능성 대비
+      const ro = new MutationObserver(()=> autoGrow(promptTA));
+      ro.observe(promptTA, { characterData:true, childList:true, subtree:true });
+      window.addEventListener('resize', ()=> autoGrow(promptTA));
+    }
+
+    // (옵션) 전송 버튼 데모
+    document.getElementById('sendBtn')?.addEventListener('click', ()=>{
+      const box = document.querySelector('.comment-input.ce');
+      if(!box) return;
+      const text = box.innerText.trim();
+      if(!text) return;
+      // TODO: 서버 전송…
+      box.innerText = '';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+
+:root{
+  --bg:#1c1c1c;
+  --surface:#282828;
+  --card:#202020;
+  --primary:#5865F2;
+  --muted:#b9bbbe;
+  --text:#dcddde;
+  --border:#404040;
+}
+
+*{ box-sizing:border-box; }
+
+/* 전역 스크롤 제거 + 높이 고정 */
+html, body { height:100%; }
+body{
+  margin:0;
+  font-family:'Gowun Dodum', sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow:hidden;
+}
+
+/* 전체 프레임 */
+.page{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+
+/* 두 컬럼 래퍼 */
+.content.two-pane{
+  flex:1;
+  display:flex;
+  min-height:0;
+}
+
+/* 좌/우 비율 */
+.left-pane{
+  flex:0 0 var(--left);
+  min-width: 280px;
+  max-width: calc(100% - 320px);
+  display:flex; flex-direction:column;
+  border-right:1px solid var(--border);
+  min-height:0;
+  overflow:auto;
+  background:#111;
+}
+.comments{
+  flex:0 0 var(--right);
+  min-width: 320px;
+  display:flex; flex-direction:column;
+  background:var(--card);
+  min-height:0;
+  overflow:auto;
+}
+
+/* 좌측 헤더 */
+.app-header-inset{
+  position:sticky; top:0; z-index:5;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+}
+.user-info{ display:flex; align-items:center; gap:12px; }
+.avatar{ width:56px; height:56px; border-radius:50%; }
+.username{ font-weight:700; font-size:16px; }
+.sub{ font-size:12px; color:var(--muted); display:block; }
+.header-actions{ display:flex; align-items:center; gap:8px; }
+.btn{
+  border:none; border-radius:8px; padding:8px 14px; cursor:pointer;
+  background:#3a3a3a; color:var(--text); font-weight:600;
+}
+.btn-primary{ background:var(--primary); color:#fff; }
+.icon-btn{
+  width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center;
+  border:none; border-radius:8px; background:#333; color:var(--text); cursor:pointer;
+}
+
+/* ✅ 프롬프트 바: auto-grow 가능한 readonly textarea 스타일 */
+.prompt-bar-inset{
+  position:sticky; top:60px; z-index:4;
+  display:flex; align-items:flex-start; gap:12px;
+  padding:12px 16px; background:var(--surface);
+  border-bottom:1px solid var(--border);
+}
+.prompt-text{
+  flex:1;
+  display:block;
+  width:100%;
+  border:none; outline:none;
+  resize:none;            /* 사용자가 수동 리사이즈 못하게 */
+  background:transparent;
+  color:var(--muted);
+  font-size:14px; line-height:1.5;
+  padding:0;              /* 버튼과 수직 정렬 */
+  overflow:hidden;        /* 높이는 JS로 확장 */
+  max-height:30vh;        /* 안전장치 (JS와 동일 값) */
+  white-space:pre-wrap; overflow-wrap:anywhere; word-break:break-word;
+}
+.copy-btn{ background:#4f545c; color:#fff; flex:0 0 auto; }
+
+/* 이미지 */
+.image-area{
+  position:relative; flex:1 1 auto; min-height:0;
+  display:flex; align-items:center; justify-content:center;
+  background:#111;
+}
+.image-area img{ max-width:100%; max-height:100%; object-fit:contain; }
+.image-actions{
+  position:absolute; left:16px; bottom:16px; display:flex; gap:8px;
+}
+.image-actions .icon-btn{
+  background:rgba(0,0,0,.45);
+  width:60px;
+  height:60px;
+  font-size:18px;
+}
+.image-actions .icon-btn.liked{
+  color:#ff3b58; background:rgba(0,0,0,.7);
+}
+
+/* ✅ 원본 보기 버튼 스타일 */
+.view-original-btn{
+  position:absolute; top:12px; right:12px;
+  background:rgba(0,0,0,.6); color:#fff; border:none;
+  padding:6px 10px; border-radius:8px; font-size:12px; cursor:pointer;
+}
+
+/* 우측 댓글 */
+.comments-header{
+  position:sticky; top:0; z-index:5;
+  padding:14px; background:var(--card);
+  border-bottom:1px solid var(--border);
+}
+.comment-list{
+  height: var(--listHeight);
+  overflow:auto;
+  list-style:none; margin:0; padding:14px;
+  display:flex; flex-direction:column; gap:16px;
+}
+.comment-item{ display:flex; gap:10px; }
+.comment-avatar{ width:44px; height:44px; border-radius:50%; }
+.comment-content strong{ font-size:15px; }
+.comment-content p{ margin:4px 0; font-size:14px; line-height:1.6; }
+.comment-timestamp{ font-size:12px; color:var(--muted); }
+
+/* 입력(CE 유지) */
+.comment-input-row{
+  position:sticky; bottom:0; z-index:5;
+  display:flex; align-items:center; gap:8px;
+  padding:10px 12px; background:var(--card);
+  border-top:1px solid var(--border);
+}
+.comment-input.ce{
+  display:block;
+  border:1px solid var(--border);
+  border-radius:20px;
+  background:var(--bg);
+  color:var(--text);
+  font-size:14px;
+  padding:10px 14px;
+  line-height:1.5;
+
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+
+  min-height:44px;
+  overflow:hidden;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+  flex:1;
+}
+.comment-input.ce::-webkit-scrollbar{ display:none; }
+.comment-input.ce:empty::before{
+  content: attr(data-placeholder);
+  color: var(--muted);
+}
+
+.send-btn{ color:var(--primary); background:none; }
+
+/* 반응형 */
+@media (max-width: 680px){
+  .content.two-pane{ flex-direction:column; }
+  .left-pane, .comments{ flex:1 1 auto; max-width:100%; min-width:auto; }
+  .prompt-bar-inset{ top:56px; }
+}
