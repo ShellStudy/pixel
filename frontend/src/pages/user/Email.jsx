@@ -40,7 +40,7 @@ const Email = () => {
             <p className="hint">인증 코드는 3분간 유효합니다.</p>
           </div>
 
-          <button className="btn" type="submit">인증하기</button>
+          <button className="btn" type="submit" style={{width: '100%'}}>인증하기</button>
 
           <p className="footer">메일을 받지 못하셨나요? <span style={{color: 'red', cursor: 'pointer'}} onClick={codeEvent}>코드 재전송</span></p>
         </form>

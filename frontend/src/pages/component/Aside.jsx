@@ -3,7 +3,7 @@ import { useRoot } from '@hooks/RootProvider.jsx'
 
 const Aside = () => {
   const { access, modalEvent, removeStorage } = useRoot()
-  const [page, setPage] = useState("/")
+  const [page, setPage] = useState(null)
   const navigate = (url) => location.href = url;
   const style = {cursor: 'pointer'};
   useEffect(() => {
@@ -19,6 +19,9 @@ const Aside = () => {
         <ul>
           <li className={page === "/" ? "active" : ""}>
             <a href="/"><i className="fas fa-compass"></i> Explore</a>
+          </li>
+          <li className={page === "/community" ? "active" : ""}>
+            <a href="/community"><i className="fas fa-comments"></i>Community</a>
           </li>
           {access &&
           <li className={page === "/mypage/media" || page === "/mypage/like" ? "active" : ""}>

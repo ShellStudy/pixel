@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useRoot } from '@hooks/RootProvider.jsx'
 import { FastAPI } from '@utils/Network.js'
+import { useNavigate } from "react-router-dom";
 
 const FreeView = () => {
   const { setIsFreeView, getBoardFile, getUserNo, getFile, board } = useRoot()
@@ -8,6 +9,7 @@ const FreeView = () => {
   const [like, setLike] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const fallbackCopyTextToClipboard = (text) => {
     const textarea = document.createElement('textarea');
@@ -52,12 +54,12 @@ const FreeView = () => {
   }
 
   const handleOpenNewTab = () => {
-    // window.open(getBoardFile(board.attachPath), "_blank", board.prompt);
-    const a = document.createElement('a');
-    a.href = getBoardFile(board.attachPath);
-    a.target = '_blank';
-    a.rel = board.prompt;
-    a.click();
+    window.open(getBoardFile(board.attachPath), "_blank", board.prompt);
+    // const a = document.createElement('a');
+    // a.href = getBoardFile(board.attachPath);
+    // a.target = '_blank';
+    // a.rel = board.prompt;
+    // a.click();
   };
 
   const likeEvent = () => {
@@ -79,7 +81,7 @@ const FreeView = () => {
       <div className="overlay" onClick={()=>setIsFreeView(false)}></div>
       <div className="modal-content">
         <header className="modal-header">
-          <div className="user-info">
+          <div className="user-info" onClick={()=>location.href = `/profile/media?no=${board.userNo}`}>
             <img src={getFile(board.userFileNo)} alt="User avatar" className="avatar" />
             <span className="username">{board.name}</span>
           </div>

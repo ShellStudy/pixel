@@ -38,7 +38,7 @@ const Login = () => {
           <label htmlFor="email">이메일</label>
           <input type="email" id="email" name="email" className="input" ref={emailRef} placeholder="id@example.com" required />
         </div>
-        <button className="btn" type="button" onClick={submitEvent} disabled={accept}>이메일 인증</button>
+        <button className="btn" type="button" style={{width: '100%'}} onClick={submitEvent} disabled={accept}>이메일 인증</button>
         <p className="footer">계정이 없으신가요? <span style={{color: 'red', cursor: 'pointer'}} onClick={()=>modalEvent("SignUp")}>회원가입</span></p>
       </section>
     </>

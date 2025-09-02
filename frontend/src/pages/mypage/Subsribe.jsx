@@ -27,7 +27,7 @@ const Subsribe = ({setSubsribe}) => {
         <ul>
           {list?.map((row, index) => {
             return (
-              <li key={index} onClick={()=>alert(row.no)} style={{cursor: 'pointer'}}>
+              <li key={index} onClick={()=>location.href = `/profile/media?no=${row.no}`} style={{cursor: 'pointer'}}>
                 <img src={getFile(row.fileNo)} alt="사용자 A" />
                 <span>{row.name}</span>
               </li>

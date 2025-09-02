@@ -50,7 +50,7 @@ const SignUp = () => {
           <div className="field">
             <label htmlFor="email">이메일</label>
             <input type="email" id="email" name="email" className="input" placeholder="id@example.com" ref={emailRef} required readOnly={email} />
-            {isButton && <button className="btn" type="button" onClick={checkEmail}>중복확인</button>}
+            {isButton && <button className="btn" type="button" style={{width: '100%'}} onClick={checkEmail}>중복확인</button>}
           </div>
 
           {email &&
@@ -58,7 +58,7 @@ const SignUp = () => {
             <div className="field">
               <label htmlFor="name">사용자 이름</label>
               <input type="text" id="name" name="name" className="input" placeholder="홍길동" minLength="2" required />
-              <button className="btn" type="submit">회원가입</button>
+              <button className="btn" type="submit" style={{width: '100%'}}>회원가입</button>
             </div>
           </form>
           }

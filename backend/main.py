@@ -27,6 +27,10 @@ class Like(BaseModel):
   boardNo : int
   userNo : int
 
+class Subsribe(BaseModel):
+  sNo : int
+  uNo : int
+
 origins = [os.getenv('FRONT_HOST1'),os.getenv('FRONT_HOST2')]
 COMFYUI_URL = os.getenv('COMFYUI_URL')
 
@@ -53,6 +57,37 @@ app.mount("/images", StaticFiles(directory=static_dir), name="images")
 def home():
   return {"status": 1}
 
+@app.post("/community")
+def community():
+  conn = mariadb.connect(**conn_params)
+  cur = conn.cursor()
+  sql = '''
+        SELECT c.`no` AS commentNo, c.`txt`, c.`regUserNo`, c.`boardNo`, u.`name` 
+          FROM pixel.`comment` AS c
+        INNER JOIN pixel.`board` AS b
+            ON (c.boardNo = b.`no` AND b.useYn = 'Y')
+        INNER JOIN auth.`user` AS u
+            ON (b.regUserNo = u.`no` AND u.useYn = 'Y')
+        WHERE c.useYn = 'Y'
+        ORDER BY c.`no` desc
+        
+  '''
+  cur.execute(sql)
+  columns = [desc[0] for desc in cur.description]
+  rows = cur.fetchall()
+  result = [dict(zip(columns, row)) for row in rows]
+  cur.close()
+  conn.close()
+  if result:
+    return {
+      "status": True,
+      "result" : result
+    }
+  else :
+    return {
+      "status": False
+    }
+    
 @app.post("/board")
 def boards():
   conn = mariadb.connect(**conn_params)
@@ -144,6 +179,52 @@ def subsribe(no: int):
       "status": False
     }
     
+@app.put("/subsribe/{s}")
+def subsribe(s: int, subsribe : Subsribe):
+  try:
+    conn = mariadb.connect(**conn_params)
+    cur = conn.cursor()
+    sql = None
+    if s == 1:
+      sql = f'''
+            SELECT `no`, userNo, regUserNo, useYn
+              FROM pixel.`subscribe` 
+            WHERE userNo = {subsribe.sNo}
+              AND regUserNo = {subsribe.uNo}
+      '''
+      cur.execute(sql)
+      columns = [desc[0] for desc in cur.description]
+      row = cur.fetchone()
+      result = dict(zip(columns, row)) if row else None
+      
+      if result:
+        sql = f'''
+            UPDATE pixel.`subscribe` SET useYn = 'Y' WHERE userNo = {subsribe.sNo} AND regUserNo = {subsribe.uNo}
+        '''
+      else :
+        sql = f'''
+            INSERT INTO pixel.`subscribe` 
+            (userNo, useYn, regUserNo) 
+            VALUE 
+            ({subsribe.sNo}, 'Y', {subsribe.uNo})
+        '''
+    else :
+      sql = f'''
+        UPDATE pixel.`subscribe` SET useYn = 'N' WHERE userNo = {subsribe.sNo} AND regUserNo = {subsribe.uNo}
+      '''
+    cur.execute(sql)
+    conn.commit()
+    cur.close()
+    conn.close()
+    return {
+      "status": True
+    }
+  except mariadb.Error as e:
+    print(f"MariaDB 오류 발생: {e}")
+    return {
+      "status": False
+    }
+    
 @app.post("/info/{no}")
 def info(no: int):
   conn = mariadb.connect(**conn_params)
@@ -161,12 +242,57 @@ def info(no: int):
   columns = [desc[0] for desc in cur.description]
   row = cur.fetchone()
   result = dict(zip(columns, row)) if row else None
+  
   cur.close()
   conn.close()
   if result:
     return {
       "status": True,
       "result" : result
+    }
+  else :
+    return {
+      "status": False
+    }
+    
+@app.post("/profile")
+def profile(subsribe : Subsribe):
+  conn = mariadb.connect(**conn_params)
+  cur = conn.cursor()
+  sql = f'''
+        SELECT u.no, u.name, u.fileNo, COUNT(s.no) AS subscribeCount
+          FROM auth.`user` u
+          LEFT JOIN pixel.`subscribe` s
+            ON s.regUserNo = u.no AND s.useYn = 'Y'
+        WHERE u.useYn = 'Y'
+          AND u.no = {subsribe.sNo}
+        GROUP BY u.no, u.name, u.fileNo
+  '''
+  cur.execute(sql)
+  columns = [desc[0] for desc in cur.description]
+  row = cur.fetchone()
+  result1 = dict(zip(columns, row)) if row else None
+  
+  result2 = None
+  if subsribe.uNo > 0:
+    sql = f'''
+          SELECT `no`, userNo, regUserNo, useYn
+            FROM pixel.`subscribe` 
+          WHERE userNo = {subsribe.sNo}
+            AND regUserNo = {subsribe.uNo}
+    '''
+    cur.execute(sql)
+    columns = [desc[0] for desc in cur.description]
+    row = cur.fetchone()
+    result2 = dict(zip(columns, row)) if row else None
+  
+  cur.close()
+  conn.close()
+  if result1:
+    return {
+      "status": True,
+      "result" : result1,
+      "subscribe" : result2
     }
   else :
     return {
