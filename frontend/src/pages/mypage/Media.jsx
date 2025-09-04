@@ -4,13 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { FastAPI } from '@utils/Network.js'
 
 const Media = () => {
-  const { isStorage, getBoardFile, getUserNo, targetImage } = useRoot()
+  const { isStorage, getBoardFile, getUserNo } = useRoot()
   const navigate = useNavigate();
   const [list, setList] = useState([])
   useEffect(() => {
     if(isStorage("access")) { 
       FastAPI("POST", `/board/${getUserNo()}`, {})
       .then(res => {
+        console.log(res.result)
         if(res.status) {
           setList(res.result)
         } else {
@@ -28,7 +29,7 @@ const Media = () => {
       <div className="grid">
         {list?.map((row, index) => {
           return (
-            <div className="grid-card" key={index} onClick={()=>targetImage(row)}>
+            <div className="grid-card" key={index} onClick={()=>navigate(`/freeView/${row.boardNo}`)}>
               <img src={getBoardFile(row.attachPath)} alt="" />
             </div>
           )

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRoot } from '@hooks/RootProvider.jsx'
 import { FastAPI } from '@utils/Network.js'
-import FreeView from '@pages/component/FreeView.jsx'
 
 const Root = () => {
   const { access, setAccess, modalEvent, isStorage, getBoardFile, isFreeView, setIsFreeView, getUserNo, targetImage } = useRoot()
@@ -67,7 +66,7 @@ const Root = () => {
         { /* 이미지 반복 */
           images?.map((row, index) => {
             return (
-              <div className="gallery-item" key={index} onClick={()=>targetImage(row)}>
+              <div className="gallery-item" key={index} onClick={()=>location.href = `/freeView/${row.no}`}>
                 <img src={getBoardFile(row.attachPath)} alt="AI generated image" />
                 <div className="overlay">
                   <p className="prompt-text">{row.prompt}</p>
@@ -78,7 +77,6 @@ const Root = () => {
         }
       </section>
   </main>
-  {isFreeView && <FreeView />}
   </>
   )
 }

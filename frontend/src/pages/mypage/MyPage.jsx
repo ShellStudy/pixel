@@ -6,7 +6,6 @@ import FreeView from '@pages/component/FreeView.jsx'
 import Media from '@pages/mypage/Media.jsx'
 import Like from '@pages/mypage/Like.jsx'
 import Subsribe from '@pages/mypage/Subsribe.jsx'
-import '@styles/mypage/mypage.css'
 import { FastAPI } from '@utils/Network.js'
 import None from '@assets/none.png'
 

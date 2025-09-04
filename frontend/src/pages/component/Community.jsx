@@ -75,7 +75,7 @@ const Community = () => {
                         <h3 className="post-author">{row.name}</h3>
                         <p className="post-text">{row.txt}</p>
                       </div>
-                      <a className="post-thumb" href={`#${row.boardNo}`}>
+                      <a className="post-thumb" href={`/freeView/${row.boardNo}`}>
                         <img src={getBoardFile(row.attachPath)} alt="썸네일" />
                       </a>
                     </article>

@@ -1,5 +1,6 @@
 import '@styles/App.css'
 import '@styles/Style.css'
+import '@styles/mypage/mypage.css'
 import NonePage from '@pages/component/NonePage.jsx'
 import Aside from '@pages/component/Aside.jsx'
 import Community from '@pages/component/Community.jsx'
@@ -10,6 +11,7 @@ import SignUp from '@pages/user/SignUp.jsx'
 import Email from '@pages/user/Email.jsx'
 import MyPage from '@pages/mypage/MyPage.jsx'
 import UserPage from '@pages/profile/UserPage.jsx'
+import FreeView from '@pages/component/FreeView.jsx'
 import { useRoot } from '@hooks/RootProvider.jsx'
 import { BrowserRouter, Routes, Route } from "react-router"
 
@@ -25,6 +27,7 @@ const App = () => {
             <Route path='/mypage/*' element={<MyPage />} />
             <Route path='/profile/*' element={<UserPage />} />
             <Route path='/community' element={<Community />} />
+            <Route path='/freeView/:no' element={<FreeView />} />
             <Route path='*' element={<NonePage />} />
           </Routes>
         </BrowserRouter>

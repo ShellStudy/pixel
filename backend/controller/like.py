@@ -6,6 +6,8 @@ import mariadb
 route = APIRouter(tags=["좋아요"])
 
 class Like(BaseModel):
+  status: int
+  likeNo: int
   boardNo : int
   userNo : int
 
@@ -16,7 +18,7 @@ def like(userNo : int):
     cur = conn.cursor()
     sql = f'''
           SELECT l.`no` AS likeNo, l.userNo AS likeUserNo, 
-                b.no, b.prompt, f.attachPath, u.`name`, u.no, u.fileNo AS userFileNo
+                b.no as boardNo, b.prompt, f.attachPath, u.`name`, u.no, u.fileNo AS userFileNo
           FROM pixel.`like` AS l
           INNER JOIN pixel.`board` AS b
           ON (b.no = l.boardNo AND b.useYn = 'Y')
@@ -44,12 +46,23 @@ def boardLike(like : Like):
   try:
     conn = getConn()
     cur = conn.cursor()
-    sql = f'''
-          INSERT INTO pixel.`like` 
-          (boardNo, userNo, useYn, regUserNo) 
-          VALUE 
-          ({like.boardNo}, {like.userNo}, 'Y', {like.userNo})
-    '''
+    
+    if like.status == 1 :
+      sql = f'''
+            UPDATE pixel.`like` SET useYn = 'N' WHERE boardNo= {like.boardNo} AND userNo = {like.userNo}
+      '''
+    else :
+      if like.likeNo > 0:
+        sql = f'''
+            UPDATE pixel.`like` SET useYn = 'Y' WHERE boardNo= {like.boardNo} AND userNo = {like.userNo}
+        '''
+      else :
+        sql = f'''
+              INSERT INTO pixel.`like` 
+              (boardNo, userNo, useYn, regUserNo) 
+              VALUE 
+              ({like.boardNo}, {like.userNo}, 'Y', {like.userNo})
+        '''
     cur.execute(sql)
     conn.commit()
     cur.close()
