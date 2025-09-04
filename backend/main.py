@@ -30,6 +30,10 @@ class Like(BaseModel):
 class Subsribe(BaseModel):
   sNo : int
   uNo : int
+  
+class Community(BaseModel):
+  page : int
+  q : str
 
 origins = [os.getenv('FRONT_HOST1'),os.getenv('FRONT_HOST2')]
 COMFYUI_URL = os.getenv('COMFYUI_URL')
@@ -58,30 +62,46 @@ def home():
   return {"status": 1}
 
 @app.post("/community")
-def community():
+def community(community : Community):
   conn = mariadb.connect(**conn_params)
   cur = conn.cursor()
-  sql = '''
-        SELECT c.`no` AS commentNo, c.`txt`, c.`regUserNo`, c.`boardNo`, u.`name` 
+  step = 5
+  start = community.page * step
+  sql = f'''
+        SELECT c.`no` AS commentNo, c.`txt`, c.`regUserNo`, c.`boardNo`, f.attachPath, u.`name`, u.`fileNo`
           FROM pixel.`comment` AS c
         INNER JOIN pixel.`board` AS b
-            ON (c.boardNo = b.`no` AND b.useYn = 'Y')
+          ON (c.boardNo = b.`no` AND b.useYn = 'Y')
+        INNER JOIN auth.`file` AS f
+          ON (b.fileNo = f.`no` AND f.useYn = 'Y')
         INNER JOIN auth.`user` AS u
-            ON (b.regUserNo = u.`no` AND u.useYn = 'Y')
+          ON (b.regUserNo = u.`no` AND u.useYn = 'Y')
         WHERE c.useYn = 'Y'
-        ORDER BY c.`no` desc
-        
+          AND c.txt like '%{community.q}%'
+        ORDER BY c.`no` DESC
+        LIMIT {start}, {step}
   '''
   cur.execute(sql)
   columns = [desc[0] for desc in cur.description]
   rows = cur.fetchall()
-  result = [dict(zip(columns, row)) for row in rows]
+  result1 = [dict(zip(columns, row)) for row in rows]
+    
+  sql = f'''
+        SELECT COUNT(*) AS total, CEILING(COUNT(*) / {step}) AS size FROM pixel.`comment`
+  '''
+  cur.execute(sql)
+  columns = [desc[0] for desc in cur.description]
+  row = cur.fetchone()
+  result2 = dict(zip(columns, row)) if row else None
+  
+  result = {"list": result1, "pagination": result2} 
+  
   cur.close()
   conn.close()
   if result:
     return {
       "status": True,
-      "result" : result
+      "result" : result,
     }
   else :
     return {
@@ -106,18 +126,17 @@ def boards():
   cur.execute(sql)
   columns = [desc[0] for desc in cur.description]
   rows = cur.fetchall()
-  result = [dict(zip(columns, row)) for row in rows]
   cur.close()
   conn.close()
-  if result:
-    return {
-      "status": True,
-      "result" : result
-    }
+  result = None
+  if rows:
+    result = [dict(zip(columns, row)) for row in rows]
   else :
-    return {
-      "status": False
-    }
+    result = []
+  return {
+    "status": True,
+    "result" : result
+  }
     
 @app.post("/board/{no}")
 def board(no: int):

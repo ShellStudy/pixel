@@ -10,19 +10,13 @@ const Like = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   useEffect(() => {
-    if(isStorage("access")) { 
-      // const arr = {fileNo: null}
-      // setList([...list, arr])
-      FastAPI("POST", `/like/${queryParams.get("no")}`)
-      .then(res => {
-        if(res.status) {
-          console.log(res.result)
-          setList(res.result)
-        }
-      })
-    } else {
-      navigate("/");
-    }
+    FastAPI("POST", `/like/${queryParams.get("no")}`)
+    .then(res => {
+      if(res.status) {
+        console.log(res.result)
+        setList(res.result)
+      }
+    })
   }, [])
   return (
     <>
@@ -38,7 +32,7 @@ const Like = () => {
     {list.length === 0 &&
       <div className="empty-state">
         <h1>아직 텅 빈 공간이에요.</h1>
-        <p><strong>Explore</strong>에서 프롬프트를 작성하고 <strong>Generate</strong>를 눌러<br/> 이미지를 생성해 보세요!</p>
+        <p><strong>Explore </strong>에서 마음에 드는 생성물에<strong> Like</strong>를 눌러<br/> 이미지를 보관해보세요!</p>
       </div>
     }
     </>

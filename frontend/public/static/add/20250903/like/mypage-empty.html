@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>마이페이지 (비어있음)</title>
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="mypage-empty.css" />
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1 class="brand" onclick="location.href='/'">AI Gen</h1>
+    </div>
+
+    <nav class="sidebar-nav" role="navigation" aria-label="Primary">
+      <ul>
+        <li>
+          <a href="#">
+            <i class="fa-solid fa-compass" aria-hidden="true"></i>
+            <span>Explore</span>
+          </a>
+        <li>
+          <a href="#">
+            <i class="fa-solid fa-compass" aria-hidden="true"></i>
+            <span>Community</span>
+          </a>
+        </li>
+        <li>
+        <li class="active">
+        <a href="#" aria-current="page">
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+            <span>My Page</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button type="button" class="theme-toggle">Info</button>
+      <button type="button" class="theme-toggle">Logout</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <section class="profile-card">
+      <div class="profile-avatar">
+        <img src="https://via.placeholder.com/96" alt="프로필 이미지">
+      </div>
+      <div class="profile-info">
+        <h1 class="profile-name">김픽셀</h1>
+        <p class="profile-meta">팔로잉 <strong>3</strong>명</p>
+        <div class="profile-actions">
+          <button class="btn btn-outline">구독 목록</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="tabs">
+      <a href="#">Create Media</a>
+      <a href="#" class="active">Like</a>
+    </div>
+
+    <div class="empty-state">
+      <h1>아직 텅 빈 공간이에요.</h1>
+      <p><strong>Explore </strong>에서 마음에 드는 생성물에<strong> Like</strong>를 눌러<br> 이미지를 보관해보세요!</p>
+    </div>
+  </main>
+</body>
+</html>

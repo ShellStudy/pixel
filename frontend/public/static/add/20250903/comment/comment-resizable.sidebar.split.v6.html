@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Comment (Auto-Grow & Responsive)</title>
+  <link rel="stylesheet" href="comment-resizable.sidebar.split.v6.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+</head>
+<body>
+  <div class="page">
+    <main class="content two-pane" id="splitRoot">
+      <div class="app-shell">
+        <aside class="ai-sidebar" aria-label="AI Gen 사이드바">
+          <div class="ai-brand">AI Gen</div>
+          <nav class="ai-nav" role="navigation">
+            <a class="ai-item active" href="#explore"><i class="fa-solid fa-compass"></i><span>Explore</span></a>
+            <a class="ai-item" href="#community"><i class="fa-solid fa-comments"></i><span>Community</span></a>
+            <a class="ai-item" href="#mypage"><i class="fa-solid fa-user"></i><span>My Page</span></a>
+          </nav>
+          <div class="ai-footer">
+            <a class="ai-btn" href="#info">Info</a>
+            <a class="ai-btn" href="#logout">Logout</a>
+          </div>
+        </aside>
+
+        <div class="center-stack">
+          <section class="left-pane" aria-label="작품 및 정보">
+            <header class="app-header-inset">
+              <div class="user-info">
+                <img src="https://picsum.photos/seed/user1/56/56" alt="User avatar" class="avatar">
+                <div class="meta">
+                  <strong class="username">ArtisticAI</strong>
+                </div>
+              </div>
+              <div class="header-actions">
+                <button class="btn btn-primary">구독</button>
+                <button class="btn btn-cancel" type="button" aria-label="닫기">×</button>
+              </div>
+            </header>
+
+            <section class="prompt-bar-inset">
+              <input type="checkbox" id="promptToggle" class="visually-hidden" hidden>
+              <p class="prompt-text collapsed" id="promptText">
+                a majestic lion with a crown of stars, photorealistic, cinematic lighting, 8k
+              </p>
+
+              <div class="prompt-actions">
+                <input type="checkbox" id="copyState" class="copy-toggle" hidden>
+                <label for="copyState"
+                      class="btn copy-btn"
+                      aria-live="polite"
+                      data-default="프롬프트 복사"
+                      data-done="복사 완료!"></label>
+
+                <label for="promptToggle" class="btn expand-btn" aria-controls="promptText"></label>
+              </div>
+            </section>
+
+            <div class="image-area">
+              <img src="https://images.unsplash.com/photo-1599839958368-1549c71c0803?q=80&w=1287&auto-format&fit=crop" alt="Generated artwork">
+
+              <div class="image-actions">
+                <input type="checkbox" id="likeToggle" class="sr-only" hidden>
+                <label for="likeToggle" class="icon-btn sm like-btn" aria-label="좋아요">
+                  <i class="fa-regular fa-heart icon-heart-regular" aria-hidden="true"></i>
+                  <i class="fa-solid fa-heart icon-heart-solid" aria-hidden="true"></i>
+                  <span class="sr-only">
+                    <span class="like-state-on">좋아요 취소</span>
+                    <span class="like-state-off">좋아요</span>
+                  </span>
+                </label>
+              </div>
+
+              <a class="view-original-btn"
+                href="https://images.unsplash.com/photo-1599839958368-1549c71c0803?q=80&w=2000&auto-format&fit=crop"
+                target="_blank" rel="noopener">
+                <i class="fa-solid fa-up-right-and-down-left-from-center"></i> 원본 보기
+              </a>
+            </div>
+          </section>
+        </div>
+
+        <aside class="comments" aria-label="댓글" id="commentsPane" style="--listHeight:70%;">
+          <div class="comments-header">
+            <h3>코멘트</h3>
+          </div>
+
+          <ul class="comment-list" id="commentList">
+
+          </ul>
+
+          <div class="h-resizer" id="hResizer" role="separator"
+              aria-orientation="horizontal" aria-label="댓글 목록과 입력창 높이 조절" tabindex="0"></div>
+
+          <form class="comment-input-row">
+            <textarea class="comment-input" placeholder="코멘트 남기기..."></textarea>
+            <button class="send-btn" aria-label="전송">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </form>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>
