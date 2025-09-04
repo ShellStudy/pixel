@@ -362,11 +362,13 @@ async def comfyUI(prompt : Prompt):
         last_id = cur.lastrowid
         print(last_id)
         
+        p = prompt.p.replace("\"", "'")
+        
         sql = f'''
               INSERT INTO pixel.`board`
               (`prompt`, `fileNo`, `useYn`, `regUserNo`) 
               VALUE 
-              ("{prompt.p}", {last_id}, 'Y', {prompt.no})
+              ("{p}", {last_id}, 'Y', {prompt.no})
         '''
         cur.execute(sql)
         
