@@ -366,7 +366,7 @@ async def comfyUI(prompt : Prompt):
               INSERT INTO pixel.`board`
               (`prompt`, `fileNo`, `useYn`, `regUserNo`) 
               VALUE 
-              ('{prompt.p}', {last_id}, 'Y', {prompt.no})
+              ("{prompt.p}", {last_id}, 'Y', {prompt.no})
         '''
         cur.execute(sql)
         
