@@ -12,8 +12,9 @@ const Aside = () => {
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        {/* <i className="fas fa-rocket logo-icon"></i> */}
-        <h1 onClick={()=>navigate('/')} style={style}>AI Gen</h1>
+        {/* <i style={{backgroundImage: 'url(/Pixel_Symbol.png)', width: '20px', height: '20px'}}></i> */}
+        <img src="/Pixel_Symbol.png" style={{width: '48px'}} />
+        <h1 onClick={()=>navigate('/')} style={style}>Gen AI</h1>
       </div>
       <nav className="sidebar-nav">
         <ul>

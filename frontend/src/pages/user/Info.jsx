@@ -96,7 +96,7 @@ const Info = () => {
         <div className="row">
           <button type='button' className="btn" onClick={btn1Event}>회원정보 {isEdit ? '수정' : '저장'}</button>
           <button type='button' className="btn" onClick={btn2Event} disabled={isEdit}
-            style={{background: 'var(--danger)', borderColor: 'var(--danger)', boxShadow: '0 10px 22px rgba(255,90,122,.28)'}}>
+            style={{background: 'var(--danger)', borderColor: 'var(--danger)', boxShadow: '0 10px 22px rgba(255,90,122,.28)', color: '#fff'}}>
             회원탈퇴
           </button>
         </div>
