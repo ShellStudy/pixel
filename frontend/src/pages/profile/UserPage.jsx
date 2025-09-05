@@ -45,9 +45,6 @@ const UserPage = () => {
         } else {
           setIsSubsribe(false)
         }
-      } else {
-        // alert("요청하신 사용자는 존재하지 않습니다.")
-        // navigate("/")
       }
     })
   }, [])

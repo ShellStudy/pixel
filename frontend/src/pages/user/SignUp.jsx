@@ -3,16 +3,18 @@ import { useRoot } from '@hooks/RootProvider.jsx'
 import { POST, PUT } from '@utils/Network.js'
 
 const SignUp = () => {
-  const { modalEvent, closeEvent, isValidEmail } = useRoot()
+  const { modalEvent, closeEvent, isValidEmail, setStorage } = useRoot()
   const [email, setEmail] = useState(false);
   const [isButton, setIsButton] = useState(true);
   const emailRef = useRef(null)
   
   const checkEmail = () => {
     if(isValidEmail(emailRef.current.value)) {
-      POST("/oauth/user/email", {email : emailRef.current.value, type : 1})
+      const param = {email : emailRef.current.value, type : 1}
+      POST("/oauth/user/email", param)
       .then(res => {
         if(res.status) {
+          setStorage("code", JSON.stringify(param))
           setIsButton(false)
           setEmail(true)
         } else {

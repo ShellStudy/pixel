@@ -15,7 +15,7 @@ const Media = () => {
       if(res.status) {
         setList(res.result)
       } else {
-        // alert("오류")
+        setList([])
       }
     })
   }, [])

@@ -13,8 +13,9 @@ const Like = () => {
     FastAPI("POST", `/like/${queryParams.get("no")}`)
     .then(res => {
       if(res.status) {
-        console.log(res.result)
         setList(res.result)
+      } else {
+        setList([])
       }
     })
   }, [])

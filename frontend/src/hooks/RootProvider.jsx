@@ -44,8 +44,8 @@ const RootProvider = ({children}) => {
     return regex.test(email);
   }
 
-  const setStorage = (name, token) => {
-    setCookie(name, encode(token));
+  const setStorage = (name, txt) => {
+    setCookie(name, encode(txt));
     return true;
   }
   

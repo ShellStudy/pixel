@@ -13,7 +13,9 @@ const Subsribe = ({setSubsribe}) => {
       .then(res => {
         if(res.status) {
           setList(res.result)
-        } 
+        } else {
+          setList([])
+        }
       })
     } else {
       navigate("/");

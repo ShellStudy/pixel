@@ -3,15 +3,17 @@ import { useRoot } from '@hooks/RootProvider.jsx'
 import { POST } from '@utils/Network.js'
 
 const Login = () => {
-  const { modalEvent, closeEvent, isValidEmail } = useRoot()
+  const { modalEvent, closeEvent, isValidEmail, setStorage } = useRoot()
   const [ accept, setAccept ] = useState(false)
   const emailRef = useRef(null)
   const submitEvent = () => {
     if(isValidEmail(emailRef.current.value)) {
       setAccept(true)
-      POST("/oauth/user/email", {email : emailRef.current.value, type : 2})
+      const param = {email : emailRef.current.value, type : 2}
+      POST("/oauth/user/email", param)
       .then(res => {
         if(res.status) {
+          setStorage("code", JSON.stringify(param))
           setAccept(false)
           modalEvent("Email")
         } else {

@@ -2,9 +2,16 @@ import { useRoot } from '@hooks/RootProvider.jsx'
 import { POST } from '@utils/Network.js'
 
 const Email = () => {
-  const { closeEvent, setStorage } = useRoot()
+  const { closeEvent, setStorage, getStorage, removeStorage } = useRoot()
   const codeEvent = () => {
-    // 백엔드 처리 부분
+    POST("/oauth/user/email", JSON.parse(getStorage("code")))
+    .then(res => {
+      if(res.status) {
+        alert("Email를 확인해 주세요.")
+      } else {
+        alert(res.message)
+      }
+    })
   }
   const submitEvent = (e) => {
     e.preventDefault();
@@ -12,6 +19,7 @@ const Email = () => {
     .then(res => {
       if(res.status) {
         if(setStorage("access", res.result)) {
+          removeStorage("code")
           location.reload()
         }
       }else {

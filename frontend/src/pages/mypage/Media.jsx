@@ -11,15 +11,12 @@ const Media = () => {
     if(isStorage("access")) { 
       FastAPI("POST", `/board/${getUserNo()}`, {})
       .then(res => {
-        console.log(res.result)
         if(res.status) {
           setList(res.result)
         } else {
-          // alert("오류")
+          setList([])
         }
       })
-      // const arr = {fileNo: null}
-      // setList([...list, arr, arr])
     } else {
       navigate("/");
     }

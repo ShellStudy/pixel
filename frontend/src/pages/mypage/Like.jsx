@@ -9,13 +9,12 @@ const Like = () => {
   const [list, setList] = useState([])
   useEffect(() => {
     if(isStorage("access")) { 
-      // const arr = {fileNo: null}
-      // setList([...list, arr])
       FastAPI("POST", `/like/${getUserNo()}`)
       .then(res => {
         if(res.status) {
-          console.log(res.result)
           setList(res.result)
+        } else {
+          setList([])
         }
       })
     } else {
