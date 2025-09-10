@@ -1,31 +1,33 @@
-import { useState, useEffect } from 'react'
-import { useRoot } from '@hooks/RootProvider.jsx'
-import { FastAPI } from '@utils/Network.js'
+import { useState, useEffect } from 'react';
+import { useRoot } from '@hooks/RootProvider.jsx';
+import { FastAPI } from '@utils/Network.js';
 import { useLocation, useNavigate } from "react-router-dom";
-import None from '@assets/none.png'
 
 const Community = () => {
-  const { access, getFile, getBoardFile } = useRoot()
-  const [list, setList] = useState([])
-  const [pagination, setPagination] = useState([])
-  const [page, setPage] = useState(0)
+  const { getFile, getBoardFile } = useRoot();
+  const [list, setList] = useState([]);
+  const [pagination, setPagination] = useState([]);
+  const [page, setPage] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
   const pageEvent = (type) => {
+    let index = page;
     if(type === "prev") {
-      if(page > 0) setPage(page - 1)
+      if(page > 0) index -= 1;
     } 
     else if(type === "next") {
-      if(page < pagination.size - 1) setPage(page + 1)
+      if(page < pagination.size - 1) index += 1;
     }
-    getData(page, "")
+    navigate(`/community?page=${ (index + 1) }`);
+    setPage(index);
+    getData(index, "");
   }
 
   const submitEvent = (e) => {
-    e.preventDefault()
-    getData(page , e.target.q.value)
+    e.preventDefault();
+    getData(page , e.target.q.value);
   }
 
   const getData = (p_page, q) => {
@@ -38,14 +40,14 @@ const Community = () => {
           navigate("/community")
         }
       }
-    })
+    });
   }
   
   useEffect(() => {
-    let p_page = queryParams.get("page")
-    p_page = p_page === null ? 0 : Number(queryParams.get("page")) - 1
-    setPage(p_page)
-    getData(p_page, "")    
+    let p_page = queryParams.get("page");
+    p_page = (p_page === null) ? 0 : (Number(queryParams.get("page")) - 1);
+    setPage(p_page);
+    getData(p_page, "");
   }, [])
   return (
     <main className="main-content">
@@ -84,6 +86,7 @@ const Community = () => {
               })
             }
           </div>
+
           {
             list.length > 0 &&
             <nav className="pagination" aria-label="페이지 이동">
@@ -111,4 +114,4 @@ const Community = () => {
   )
 }
 
-export default Community
+export default Community;
