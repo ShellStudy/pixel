@@ -58,7 +58,7 @@ const UserPage = () => {
           <div className="profile-actions">
             {
             isSubsribe ? 
-            <button type='button' className="follow-btn" onClick={()=>subsribeEvent(0)}>구독 취소</button>
+            <button type='button' className="follow-revoke-btn" onClick={()=>subsribeEvent(0)}>구독 취소</button>
             :
             <button type='button' className="follow-btn" onClick={()=>subsribeEvent(1)}>구독</button>
             }
