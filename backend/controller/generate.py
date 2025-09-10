@@ -5,6 +5,7 @@ import json
 from urllib import request
 import asyncio
 import uuid
+import random
 from datetime import datetime
 import os
 from dotenv import load_dotenv
@@ -14,8 +15,31 @@ COMFYUI_URL = os.getenv('COMFYUI_URL')
 route = APIRouter(tags=["이미지 생성"])
 
 class Prompt(BaseModel):
-  p : str
   no : int
+  p : str
+  ratio: str
+  seed: int
+  controlAfterGenerate: str
+  step: int
+  cfg: int
+  samplerName: str 
+  scheduler: str 
+  denoise: float
+  model: int
+  
+ratios = {
+  "portrait" : [512, 768],
+  "square" : [512, 512],
+  "landscape" : [768, 512],
+}
+
+models = [
+  "dreamshaper_8.safetensors",
+  "majicmixRealistic_v7.safetensors",
+  "majicmixRealistic_v7.safetensors",
+  "majicmixRealistic_v7.safetensors",
+  "majicmixRealistic_v7.safetensors",
+]
 
 @route.post("/gen")
 async def comfyUI(prompt : Prompt):
@@ -23,7 +47,39 @@ async def comfyUI(prompt : Prompt):
     # p = "a majestic lion with a crown of stars, photorealistic"
     with open("flow/1.json", "r", encoding="utf-8") as f:
       workflow = json.load(f)
+      
+    # 1) 긍정 프롬프트
     workflow["6"]["inputs"]["text"] = prompt.p
+    
+    # 2) 이미지 크기
+    ratio = ratios[prompt.ratio]
+    workflow["5"]["inputs"]["width"] = ratio[0]
+    workflow["5"]["inputs"]["height"] = ratio[1]
+    
+    # 3) SEED & Control after generate
+    if prompt.controlAfterGenerate == 'randomize':
+      number = random.randint(10**14, 10**15 - 1)
+      workflow["3"]["inputs"]["seed"] = number
+    else:
+      workflow["3"]["inputs"]["seed"] = prompt.seed
+    
+    # 4) STEP
+    workflow["3"]["inputs"]["steps"] = prompt.step
+        
+    # 5) CFG
+    workflow["3"]["inputs"]["cfg"] = prompt.cfg
+        
+    # 6) Sampler Name
+    workflow["3"]["inputs"]["sampler_name"] = prompt.samplerName
+    
+    # 7) Scheduler
+    workflow["3"]["inputs"]["scheduler"] = prompt.scheduler
+        
+    # 8) Denoise
+    workflow["3"]["inputs"]["denoise"] = prompt.denoise
+    
+    # 9) Model
+    workflow["4"]["inputs"]["ckpt_name"] = models[prompt.model]
 
     prompt_id = queue_prompt(workflow)
     result = await check_progress(prompt_id)
