@@ -27,6 +27,11 @@ const Root = () => {
 
   const applyEvent = () => {
     setIsLoading(true)
+    if(promptRef.current.value === "") {
+      promptRef.current.focus();
+      setIsLoading(false)
+      return;
+    }
     FastAPI("POST", "/gen", {p: promptRef.current.value, no: getUserNo()})
     .then(res => {
       if(res.status){
