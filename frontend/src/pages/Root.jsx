@@ -3,7 +3,7 @@ import { useRoot } from '@hooks/RootProvider.jsx'
 import { FastAPI } from '@utils/Network.js'
 
 const Root = () => {
-  const { access, setAccess, modalEvent, isStorage, getBoardFile, isFreeView, setIsFreeView, getUserNo, targetImage } = useRoot()
+  const { access, setAccess, modalEvent, isStorage, getBoardFile, getUserNo } = useRoot()
   const [images, setImages] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [ratio, setRatio] = useState('square')
@@ -76,7 +76,7 @@ const Root = () => {
           <textarea style={{resize:'none'}} ref={promptRef} placeholder="Imagine something... a futuristic city in the style of Van Gogh"></textarea>
           {/* <button type='button' className="btn-generate" disabled={!access} onClick={applyEvent}>Generate</button> */}
           <div className="prompt-actions">
-            <button id="settingsToggle" className="settings-btn" aria-haspopup="true" aria-expanded="false" title="Settings" onClick={()=>setSettings(!settings)}>⚙</button>
+            <button id="settingsToggle" className="settings-btn" aria-haspopup="true" aria-expanded="false" title="Settings" disabled={!access} onClick={()=> setSettings(!settings)}>⚙</button>
             <button className="btn-generate" disabled={!access} onClick={applyEvent}>Generate</button>
           </div>
         </div>

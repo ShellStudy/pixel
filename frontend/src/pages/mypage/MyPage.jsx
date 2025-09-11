@@ -10,7 +10,7 @@ import { FastAPI } from '@utils/Network.js'
 import None from '@assets/none.png'
 
 const MyPage = () => {
-  const { isStorage, getFile, getUserNo, isFreeView, setIsFreeView } = useRoot()
+  const { isStorage, getFile, getUserNo, isFreeView } = useRoot()
   const navigate = useNavigate();
   const [user, setUser] = useState({ email: '', name: '' })
   const [image, setImage] = useState(None);
