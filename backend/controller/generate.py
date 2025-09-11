@@ -35,10 +35,9 @@ ratios = {
 
 models = [
   "dreamshaper_8.safetensors",
-  "majicmixRealistic_v7.safetensors",
-  "majicmixRealistic_v7.safetensors",
-  "majicmixRealistic_v7.safetensors",
-  "majicmixRealistic_v7.safetensors",
+  "counterfeitV30_v30.safetensors",
+  "cyberrealistic_v90.safetensors",
+  "revAnimated_v2Rebirth.safetensors"
 ]
 
 @route.post("/gen")

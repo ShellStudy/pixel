@@ -9,7 +9,7 @@ const Root = () => {
   const [ratio, setRatio] = useState('square')
   const [seed, setSeed] = useState(1)
   const [controlAfterGenerate, setControlAfterGenerate] = useState("randomize")
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(20)
   const [cfg, setCFG] = useState(7)
   const [samplerName, setSamplerName] = useState('euler')
   const [scheduler, setScheduler] = useState('simple')
@@ -177,11 +177,10 @@ const Root = () => {
                 <div className="select-row">
                   <span className="setting-desc">Model</span>
                   <select className="sampler-select" value={model} onChange={(e)=>setModel(e.target.value)}>
-                    <option value="0">Model 1</option>
-                    <option value="1">Model 2</option>
-                    <option value="2">Model 3</option>
-                    <option value="3">Model 4</option>
-                    <option value="4">Model 5</option>
+                    <option value="0">dreamshaper_8</option>
+                    <option value="1">counterfeitV30_v30</option>
+                    <option value="2">cyberrealistic_v90</option>
+                    <option value="3">revAnimated_v2Rebirth</option>
                   </select>
                 </div>
               </div>
