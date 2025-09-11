@@ -4,7 +4,7 @@ import { FastAPI } from '@utils/Network.js';
 import { useLocation, useNavigate } from "react-router-dom";
 
 const Community = () => {
-  const { getFile, getBoardFile } = useRoot();
+  const { getFile, getBoardFile, getUserNo, access } = useRoot();
   const [list, setList] = useState([]);
   const [pagination, setPagination] = useState([]);
   const [page, setPage] = useState(0);
@@ -70,9 +70,16 @@ const Community = () => {
                 return (
                   <section className="post-list page" key={index}>
                     <article className="post-card">
-                      <a className="post-avatar" href={`/profile/media?no=${row.regUserNo}`} aria-label="프로필">
+                      <button className="post-avatar" onClick={()=>{
+                        let url = `/profile/media?no=${row.regUserNo}`;
+                        if(access && row.regUserNo === getUserNo()) {
+                          url = "/mypage/media";
+                        }
+                        navigate(url);
+                        // location.href = url;
+                      }} aria-label="프로필">
                         <img src={getFile(row.fileNo)} alt="프로필 이미지" />
-                      </a>
+                      </button>
                       <div className="post-main">
                         <h3 className="post-author">{row.name}</h3>
                         <p className="post-text">{row.txt}</p>

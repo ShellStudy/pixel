@@ -23,6 +23,7 @@ const UserPage = () => {
   }
   const subsribeEvent = (status) => {    
     if(isStorage("access")) {
+      if(Number(queryParams.get("no")) === getUserNo()) return;
       FastAPI("PUT", `/subsribe/${status}`, {sNo: queryParams.get("no"), uNo: getUserNo()})
       .then(res => {
         if(res.status){
@@ -60,7 +61,7 @@ const UserPage = () => {
             isSubsribe ? 
             <button type='button' className="follow-revoke-btn" onClick={()=>subsribeEvent(0)}>구독 취소</button>
             :
-            <button type='button' className="follow-btn" onClick={()=>subsribeEvent(1)}>구독</button>
+            <button type='button' className="follow-btn" onClick={()=>subsribeEvent(1)} disabled={Number(queryParams.get("no")) === getUserNo()}>구독</button>
             }
           </div>
         </div>

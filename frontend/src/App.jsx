@@ -21,8 +21,8 @@ const App = () => {
   return (
     <>
       <div className="container">
-        <Aside />
         <BrowserRouter>
+          <Aside />
           <Routes>
             <Route path='/' element={<Root />} />
             <Route path='/mypage/*' element={<MyPage />} />

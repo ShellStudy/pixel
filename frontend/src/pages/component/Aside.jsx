@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react'
 import { useRoot } from '@hooks/RootProvider.jsx'
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Aside = () => {
   const { access, modalEvent, removeStorage } = useRoot()
   const [page, setPage] = useState(null)
-  const navigate = (url) => location.href = url;
+  const location = useLocation();
+  const navigate = useNavigate();
+  // const navigate = (url) => document.location.href = url;
   const style = {cursor: 'pointer'};
   useEffect(() => {
     setPage(location.pathname)
-  }, [page])
+  }, [page, location])
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
