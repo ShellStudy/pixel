@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from config.db import getConn
+from config.token import get_current
 import mariadb
 
 route = APIRouter(tags=["커뮤니티"])
@@ -11,11 +12,10 @@ class Community(BaseModel):
   
 class Comment(BaseModel):
   boardNo: int 
-  regUserNo: int
   txt: str
 
 @route.post("/community")
-def community(community : Community):
+def findAll(community : Community):
   try:
     conn = getConn()
     cur = conn.cursor()
@@ -55,7 +55,7 @@ def community(community : Community):
     return {"status": False}
   
 @route.post("/community/{boardNo}")
-def community(boardNo: int):
+def findByOne(boardNo: int):
   try:
     conn = getConn()
     cur = conn.cursor()
@@ -80,7 +80,7 @@ def community(boardNo: int):
     return {"status": False}
   
 @route.put("/community")
-def community(comment: Comment):
+def insert(comment: Comment, payload = Depends(get_current)):
   try:
     conn = getConn()
     cur = conn.cursor()
@@ -89,7 +89,7 @@ def community(comment: Comment):
           INSERT INTO pixel.`comment` 
             (boardNo, txt, useYn, regUserNo) 
           VALUE 
-            ({comment.boardNo}, '{txt}', 'Y', {comment.regUserNo})
+            ({comment.boardNo}, '{txt}', 'Y', {payload["userNo"]})
     '''
     cur.execute(sql)
     conn.commit()

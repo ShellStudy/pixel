@@ -24,7 +24,7 @@ const UserPage = () => {
   const subsribeEvent = (status) => {    
     if(isStorage("access")) {
       if(Number(queryParams.get("no")) === getUserNo()) return;
-      FastAPI("PUT", `/subsribe/${status}`, {sNo: queryParams.get("no"), uNo: getUserNo()})
+      FastAPI("PUT", `/subsribe/${status}`, {sNo: queryParams.get("no")})
       .then(res => {
         if(res.status){
           setIsSubsribe(status === 1)

@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from config.db import getConn
+from config.token import get_current
 import mariadb
 
 route = APIRouter(tags=["사용자"])
@@ -12,8 +13,8 @@ class Profile(BaseModel):
   sNo : int
   uNo : int
   
-@route.post("/info/{no}")
-def info(no: int):
+@route.post("/info")
+def info(payload = Depends(get_current)):
   try:
     conn = getConn()
     cur = conn.cursor()
@@ -23,7 +24,7 @@ def info(no: int):
             LEFT JOIN pixel.`subscribe` s
               ON s.regUserNo = u.no AND s.useYn = 'Y'
           WHERE u.useYn = 'Y'
-            AND u.no = {no}
+            AND u.no = {payload["userNo"]}
           GROUP BY u.no, u.name, u.fileNo
     '''
     cur.execute(sql)

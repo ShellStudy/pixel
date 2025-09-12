@@ -1,12 +1,13 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from config.db import getConn
+from config.token import get_current
 import mariadb
 
 route = APIRouter(tags=["게시판"])
 
 @route.post("/board")
-def boards():
+def findAll():
   try:
     conn = getConn()
     print(conn)
@@ -97,8 +98,7 @@ def freeview(no: int, userNo: int):
     columns = [desc[0] for desc in cur.description]
     row = cur.fetchone()
     result2 = dict(zip(columns, row)) if row else None
-    
-    
+        
     result3 = None
     if userNo > 0:
       sql = f'''

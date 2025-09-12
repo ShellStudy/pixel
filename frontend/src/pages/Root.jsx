@@ -44,10 +44,11 @@ const Root = () => {
       return;
     }
 
+    if(!access) return;
+
     setIsLoading(true)
     setLoading(images.length)
     const params = {
-      no: getUserNo(),
       p: promptRef.current.value,
       ratio, seed, controlAfterGenerate,  samplerName, scheduler,
       "step": Number(step), "cfg": Number(cfg), "denoise": Number(denoise),

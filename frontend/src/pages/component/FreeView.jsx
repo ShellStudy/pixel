@@ -57,7 +57,7 @@ const FreeView = () => {
 
   const subscribeEvent = () => {
     if(isStorage("access")) {
-      FastAPI("PUT", '/subsribe/1', {sNo: board.regUserNo, uNo: getUserNo()})
+      FastAPI("PUT", '/subsribe/1', {sNo: board.regUserNo})
       .then(res => {
         if(res.status){
           setIsSubscribe(true)
@@ -72,7 +72,7 @@ const FreeView = () => {
     if(!access) {
       modalEvent("Login")
     } else {
-      FastAPI("POST", "/like", {status: like.status, likeNo: like.likeNo, boardNo: params.no, userNo: getUserNo()})
+      FastAPI("POST", "/like", {status: like.status, likeNo: like.likeNo, boardNo: params.no})
       .then(res => {
         if(res.status) getData()
       })
@@ -91,7 +91,6 @@ const FreeView = () => {
     }
     const param = {
       "boardNo": params.no,
-      "regUserNo": getUserNo(),
       "txt": e.target.txt.value
     }
     FastAPI("PUT", "/community", param)

@@ -9,7 +9,7 @@ const Subsribe = ({setSubsribe}) => {
   const navigate = useNavigate();
   useEffect(() => {
     if(isStorage("access")) {
-      FastAPI("POST", `/subsribe/${getUserNo()}`, {})
+      FastAPI("POST", '/subsribe', {})
       .then(res => {
         if(res.status) {
           setList(res.result)

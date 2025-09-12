@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from config.db import getConn
+from config.token import get_current
 import mariadb
 
 route = APIRouter(tags=["좋아요"])
@@ -9,7 +10,6 @@ class Like(BaseModel):
   status: int
   likeNo: int
   boardNo : int
-  userNo : int
 
 @route.post("/like/{userNo}")
 def like(userNo : int):
@@ -42,26 +42,26 @@ def like(userNo : int):
     return {"status": False}
 
 @route.post("/like")
-def boardLike(like : Like):
+def boardLike(like : Like, payload = Depends(get_current)):
   try:
     conn = getConn()
     cur = conn.cursor()
     
     if like.status == 1 :
       sql = f'''
-            UPDATE pixel.`like` SET useYn = 'N' WHERE boardNo= {like.boardNo} AND userNo = {like.userNo}
+            UPDATE pixel.`like` SET useYn = 'N' WHERE boardNo= {like.boardNo} AND userNo = {payload["userNo"]}
       '''
     else :
       if like.likeNo > 0:
         sql = f'''
-            UPDATE pixel.`like` SET useYn = 'Y' WHERE boardNo= {like.boardNo} AND userNo = {like.userNo}
+            UPDATE pixel.`like` SET useYn = 'Y' WHERE boardNo= {like.boardNo} AND userNo = {payload["userNo"]}
         '''
       else :
         sql = f'''
               INSERT INTO pixel.`like` 
               (boardNo, userNo, useYn, regUserNo) 
               VALUE 
-              ({like.boardNo}, {like.userNo}, 'Y', {like.userNo})
+              ({like.boardNo}, {payload["userNo"]}, 'Y', {payload["userNo"]})
         '''
     cur.execute(sql)
     conn.commit()

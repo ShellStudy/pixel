@@ -24,7 +24,7 @@ const MyPage = () => {
   useEffect(() => {
     if(isStorage("access")) {
       setPage(location.pathname)
-      FastAPI("POST", `/info/${getUserNo()}`, {})
+      FastAPI("POST", '/info', {})
       .then(res => {
         if(res.status) {
           setUser(res.result)

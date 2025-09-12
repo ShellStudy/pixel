@@ -92,6 +92,7 @@ export const FastAPI = async (method, url, data) => {
       url: url,
       data
     }
+    if(getCookie("access")) conf = {...conf, headers : authorization(getCookie("access"))};
     const response = await axios(conf)
     return response.data
   } catch (err) {

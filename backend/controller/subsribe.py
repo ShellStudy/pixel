@@ -1,16 +1,16 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from config.db import getConn
+from config.token import get_current
 import mariadb
 
 route = APIRouter(tags=["구독"])
 
 class Subsribe(BaseModel):
   sNo : int
-  uNo : int
 
-@route.post("/subsribe/{no}")
-def subsribe(no: int):
+@route.post("/subsribe")
+def subsribe(payload = Depends(get_current)):
   try:
     conn = getConn()
     cur = conn.cursor()
@@ -20,7 +20,7 @@ def subsribe(no: int):
           INNER JOIN auth.`user` AS u
               ON (s.userNo = u.no AND u.useYn = 'Y')
             WHERE s.useYn = 'Y'
-            AND s.regUserNo = {no}
+            AND s.regUserNo = {payload["userNo"]}
           ORDER BY 1 DESC
     '''
     cur.execute(sql)
@@ -35,7 +35,7 @@ def subsribe(no: int):
     return {"status": False}
     
 @route.put("/subsribe/{s}")
-def subsribe(s: int, subsribe : Subsribe):
+def subsribe(s: int, subsribe : Subsribe, payload = Depends(get_current)):
   try:
     conn = getConn()
     cur = conn.cursor()
@@ -45,7 +45,7 @@ def subsribe(s: int, subsribe : Subsribe):
             SELECT `no`, userNo, regUserNo, useYn
               FROM pixel.`subscribe` 
             WHERE userNo = {subsribe.sNo}
-              AND regUserNo = {subsribe.uNo}
+              AND regUserNo = {payload["userNo"]}
       '''
       cur.execute(sql)
       columns = [desc[0] for desc in cur.description]
@@ -54,18 +54,18 @@ def subsribe(s: int, subsribe : Subsribe):
       
       if result:
         sql = f'''
-            UPDATE pixel.`subscribe` SET useYn = 'Y' WHERE userNo = {subsribe.sNo} AND regUserNo = {subsribe.uNo}
+            UPDATE pixel.`subscribe` SET useYn = 'Y' WHERE userNo = {subsribe.sNo} AND regUserNo = {payload["userNo"]}
         '''
       else :
         sql = f'''
             INSERT INTO pixel.`subscribe` 
             (userNo, useYn, regUserNo) 
             VALUE 
-            ({subsribe.sNo}, 'Y', {subsribe.uNo})
+            ({subsribe.sNo}, 'Y', {payload["userNo"]})
         '''
     else :
       sql = f'''
-        UPDATE pixel.`subscribe` SET useYn = 'N' WHERE userNo = {subsribe.sNo} AND regUserNo = {subsribe.uNo}
+        UPDATE pixel.`subscribe` SET useYn = 'N' WHERE userNo = {subsribe.sNo} AND regUserNo = {payload["userNo"]}
       '''
     cur.execute(sql)
     conn.commit()

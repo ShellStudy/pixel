@@ -1,6 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from config.db import getConn
+from config.token import get_current
 import json
 from urllib import request
 import asyncio
@@ -15,7 +16,6 @@ COMFYUI_URL = os.getenv('COMFYUI_URL')
 route = APIRouter(tags=["이미지 생성"])
 
 class Prompt(BaseModel):
-  no : int
   p : str
   ratio: str
   seed: int
@@ -41,7 +41,7 @@ models = [
 ]
 
 @route.post("/gen")
-async def comfyUI(prompt : Prompt):
+async def comfyUI(prompt : Prompt, payload = Depends(get_current)):
   try:  
     # p = "a majestic lion with a crown of stars, photorealistic"
     with open("flow/1.json", "r", encoding="utf-8") as f:
@@ -109,12 +109,12 @@ async def comfyUI(prompt : Prompt):
               INSERT INTO auth.file 
               (`origin`, `name`, `ext`, `mediaType`, `attachPath`, `useYn`, `regUserNo`) 
               VALUE 
-              ('{origin_name}', '{file_name}', '.png', 'image/png', '{file_path}', 'Y', {prompt.no})
+              ('{origin_name}', '{file_name}', '.png', 'image/png', '{file_path}', 'Y', {payload["userNo"]})
         '''
         cur.execute(sql)
         conn.commit()
         last_id = cur.lastrowid
-        print(last_id)
+        # print(last_id)
         
         p = prompt.p.replace("\'", "\"")
         
@@ -122,7 +122,7 @@ async def comfyUI(prompt : Prompt):
               INSERT INTO pixel.`board`
               (`prompt`, `fileNo`, `useYn`, `regUserNo`) 
               VALUE 
-              ('{p}', {last_id}, 'Y', {prompt.no})
+              ('{p}', {last_id}, 'Y', {payload["userNo"]})
         '''
         cur.execute(sql)
         
