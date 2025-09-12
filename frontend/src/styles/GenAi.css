@@ -38,8 +38,8 @@
   box-sizing: border-box;
 }
 
-html {height: 100%; overflow-y: hidden;}
-body {height: 100%; overflow-y: scroll;}
+/* html {height: 100%; overflow-y: hidden;} */
+/* body {height: 100%; overflow-y: scroll;} */
 html,body,#root {height: 100%;}
 body {
   font-family: 'Noto Sans KR', 'Roboto', sans-serif;
@@ -713,7 +713,7 @@ body {
   }
   .comments{
     height:auto; 
-    /* max-height:60vh; */
+    max-height:100vh;
   }
   .center-stack{
     height:auto; overflow:visible;
