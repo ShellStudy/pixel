@@ -712,7 +712,8 @@ body {
     height:auto; min-height:0;
   }
   .comments{
-    height:auto; max-height:60vh;
+    height:auto; 
+    /* max-height:60vh; */
   }
   .center-stack{
     height:auto; overflow:visible;
