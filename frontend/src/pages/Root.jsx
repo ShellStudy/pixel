@@ -181,10 +181,10 @@ const Root = () => {
                 <div className="select-row">
                   <span className="setting-desc">Model</span>
                   <select className="sampler-select" value={model} onChange={(e)=>setModel(e.target.value)}>
-                    <option value="0">dreamshaper_8</option>
-                    <option value="1">counterfeitV30_v30</option>
-                    <option value="2">cyberrealistic_v90</option>
-                    <option value="3">revAnimated_v2Rebirth</option>
+                    <option value="0">기본</option>
+                    <option value="1">일러스트</option>
+                    <option value="2">리얼리티</option>
+                    <option value="3">배경</option>
                   </select>
                 </div>
               </div>
