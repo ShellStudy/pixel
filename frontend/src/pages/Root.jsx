@@ -3,7 +3,7 @@ import { useRoot } from '@hooks/RootProvider.jsx'
 import { FastAPI } from '@utils/Network.js'
 
 const Root = () => {
-  const { access, setAccess, modalEvent, isStorage, getBoardFile, getUserNo } = useRoot()
+  const { access, setAccess, modalEvent, isStorage, getBoardFile, getUserNo, getLoading, setLoading, removeLoading } = useRoot()
   const [images, setImages] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [ratio, setRatio] = useState('square')
@@ -23,6 +23,9 @@ const Root = () => {
     FastAPI("POST", "/board", {})
     .then(res => {
       if(res.status) {
+        const gen = res.result.length === getLoading();
+        if(!gen) removeLoading();
+        setIsLoading(gen);
         setImages(res.result)
         setAccess(isStorage("access"))
       } else {
@@ -36,13 +39,13 @@ const Root = () => {
   }
 
   const applyEvent = () => {
-    setIsLoading(true)
     if(promptRef.current.value === "") {
       promptRef.current.focus();
-      setIsLoading(false)
       return;
     }
 
+    setIsLoading(true)
+    setLoading(images.length)
     const params = {
       no: getUserNo(),
       p: promptRef.current.value,
@@ -54,11 +57,12 @@ const Root = () => {
     FastAPI("POST", "/gen", params)
     .then(res => {
       if(res.status){
-        getBoards()
-        promptRef.current.value = ""
+        getBoards();
+        promptRef.current.value = "";
       } else {
         alert("이미지 생성이 실패 하였습니다.")
       }
+      setLoading(0);
       setIsLoading(false)
     })
   }

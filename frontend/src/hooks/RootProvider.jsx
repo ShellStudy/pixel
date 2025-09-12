@@ -88,12 +88,23 @@ const RootProvider = ({children}) => {
     }
   }
 
+  const setLoading = (value) => {
+    setCookie("gen", value);
+  }
+
+  const getLoading = () => {
+    const gen = Number(cookies["gen"]);
+    return gen === undefined ? 0 : gen;
+  }
+
+  const removeLoading = () => removeCookie("gen")
+
   useEffect(() => {
     if(isStorage("access")) setAccess(true)
   }, [])
 
   return (
-    <RootContext.Provider value={{ access, setAccess, isUser, isLogin, isSignUp, isEmail, modalEvent, closeEvent, isValidEmail, setStorage, getStorage, removeStorage, isStorage, getFile, getBoardFile, getUserNo, isFreeView, setIsFreeView, targetImage, board }}>
+    <RootContext.Provider value={{ access, setAccess, isUser, isLogin, isSignUp, isEmail, modalEvent, closeEvent, isValidEmail, setStorage, getStorage, removeStorage, isStorage, getFile, getBoardFile, getUserNo, isFreeView, setIsFreeView, targetImage, board, getLoading, setLoading, removeLoading }}>
       {children}
     </RootContext.Provider>
   )
